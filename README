@@ -1,0 +1,7 @@
+INImaker, Copyright 2010 Alex Margarit
+Website: http://inimaker.googlecode.com
+Email: artraid@gmail.com
+
+INImaker is a GP2X Wiz application that creates INI files for programs that
+don't have shortcuts in the Wiz Games menu. It can also find and delete INI
+files that link to deleted programs, and find missing icons.

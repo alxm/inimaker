@@ -25,17 +25,17 @@
 
 #if LOADING_BANNER
     #include "gfx/loading.h"
+
+    static Sprite* sp1;
+    static Sprite* sp2;
+    static Sprite* sp3;
+
+    #define FADE_SPEED (FONE8 >> 4)
 #endif
 
 Controls controls;
 Sprites sprites;
 Fonts fonts;
-
-static Sprite* sp1;
-static Sprite* sp2;
-static Sprite* sp3;
-
-#define FADE_SPEED (FONE8 >> 4)
 
 static void load_bannerStart(void);
 static void load_bannerDone(void);
@@ -76,8 +76,8 @@ static void load_bannerStart(void)
         sp2 = a_blit_makeSprite(s, 0, 1 * s->h / 3, s->w, s->h / 3);
         sp3 = a_blit_makeSprite(s, 0, 2 * s->h / 3, s->w, s->h / 3);
 
-        const int x = (a_width - sp1->w) >> 1;
-        const int y = (a_height - sp1->h) >> 1;
+        const int x = (a_width - sp1->w) / 2;
+        const int y = (a_height - sp1->h) / 2;
 
         for(fix8 a = 0; a <= FONE8; a += FADE_SPEED) {
             a_fps_start();
@@ -95,8 +95,8 @@ static void load_bannerStart(void)
 static void load_bannerDone(void)
 {
     #if LOADING_BANNER
-        const int x = (a_width - sp2->w) >> 1;
-        const int y = (a_height - sp2->h) >> 1;
+        const int x = (a_width - sp2->w) / 2;
+        const int y = (a_height - sp2->h) / 2;
 
         for(fix8 a = 0; a < FONE8; a += FADE_SPEED) {
             a_fps_start();
@@ -135,7 +135,7 @@ static void load_bannerDone(void)
             a_fps_end();
 
             if(i >= 20) {
-                a -= FADE_SPEED >> 1;
+                a -= FADE_SPEED / 2;
             }
         }
     #endif

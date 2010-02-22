@@ -19,10 +19,9 @@
 
 #include "includes.h"
 
-static int firstRun = 1;
-
 State(front)
 {
+    static int firstRun = 1;
     gui_setCurrentTask("Pick a task");
 
     Menu* const m = a_menu_set(controls.down, controls.up, controls.select, NULL, gui_freeItem);

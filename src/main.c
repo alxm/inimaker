@@ -22,7 +22,7 @@
 void a2x(void)
 {
 	a2x_set("title", "INImaker");
-	a2x_set("version", "1.0");
+	a2x_set("version", "1.1");
 	a2x_set("author", "Alex");
 	a2x_set("window", "yes");
 	a2x_set("width", "320");

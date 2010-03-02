@@ -25,10 +25,12 @@ static char pathBuffer[PATH_MAX];
 static const char* startPath;
 
 #if A_PLATFORM_WIZ
-    static const char* const startPathAll = "/mnt/sd";
+    static const char* const startPathNand = "/mnt/nand";
+    static const char* const startPathSD = "/mnt/sd";
     static const char* const startPathGame = "/mnt/sd/game";
 #else
-    static const char* const startPathAll = "./ini";
+    static const char* const startPathNand = "./ini";
+    static const char* const startPathSD = "./ini";
     static const char* const startPathGame = "./ini/game";
 #endif
 
@@ -47,6 +49,7 @@ State(iniMake)
 
     a_menu_addItem(m, gui_makeItem("The 'game' folder"));
     a_menu_addItem(m, gui_makeItem("The entire SD card"));
+    a_menu_addItem(m, gui_makeItem("Internal Memory (NAND)"));
     a_menu_addItem(m, gui_makeItem("Back"));
 
     StateStart {
@@ -60,11 +63,16 @@ State(iniMake)
                 } break;
 
                 case 1: {
-                    startPath = startPathAll;
+                    startPath = startPathSD;
                     a_state_go(iniWork);
                 } break;
 
                 case 2: {
+                    startPath = startPathNand;
+                    a_state_go(iniWork);
+                } break;
+
+                default: {
                     a_state_go(front);
                 } break;
             }
@@ -117,7 +125,7 @@ State(iniWork)
             } else if(isGpe(file->name) && !iniExists(iniGpes, file->full)) {
                 char* const name = a_str_extractName(file->name);
 
-                // take out /mnt/sd (/mnt/sd/game) and file extension
+                // take out startPath prefix and file extension
                 char* const relPath = a_str_sub(file->full, strlen(startPath), strlen(file->full) - 4);
 
                 // don't overwrite an existing INI file
@@ -153,9 +161,12 @@ State(iniWork)
                         if(startPath == startPathGame) {
                             fprintf(f, "path=\"%s.gpe\"\n", relPath);
                             fprintf(f, "icon=\"%s.png\"\n", relPath);
-                        } else {
+                        } else if(startPath == startPathSD) {
                             fprintf(f, "path=\"/..%s.gpe\"\n", relPath);
                             fprintf(f, "icon=\"/..%s.png\"\n", relPath);
+                        } else if(startPath == startPathNand) {
+                            fprintf(f, "path=\"/../../nand%s.gpe\"\n", relPath);
+                            fprintf(f, "icon=\"/../../nand%s.png\"\n", relPath);
                         }
 
                         a_file_close(f);

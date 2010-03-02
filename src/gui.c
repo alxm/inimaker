@@ -122,8 +122,8 @@ static void drawTitle(void)
 
     a_font_text(A_LEFT, 12, 12, fonts.orange, NCT, currentTask);
 
-    a_font_text(A_RIGHT, a_width - 12, 12, fonts.whiteBold, NCT, "INImaker 1.0");
-    a_font_text(A_RIGHT, a_width - 12, 12, fonts.grayBold, NCT, "1.0");
+    a_font_text(A_RIGHT, a_width - 12, 12, fonts.whiteBold, NCT, "INImaker 1.1");
+    a_font_text(A_RIGHT, a_width - 12, 12, fonts.grayBold, NCT, "1.1");
 }
 
 static void drawControls(void)

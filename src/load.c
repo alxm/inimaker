@@ -163,7 +163,7 @@ static void unload_controls(void)
 
 static void load_sprites(void)
 {
-    Sheet* const sheet = a_blit_makeSheet(gfx_ini_data, gfx_ini_w, gfx_ini_h);
+    Sheet* const sheet = a_sprite_sheetFromData(gfx_ini_data, gfx_ini_w, gfx_ini_h);
 
     fonts.white = a_font_load(sheet, 0, 9, 505, 9, 1, A_LOAD_ALL);
     fonts.gray = a_font_loadRGB(sheet, 0, 9, 505, 9, 1, A_LOAD_ALL, 180, 180, 180);
@@ -175,25 +175,25 @@ static void load_sprites(void)
     fonts.grayBold = a_font_loadRGB(sheet, 0, 0, 418, 9, 1, A_LOAD_ALL | A_LOAD_CAPS, 180, 180, 180);
     fonts.orangeBold = a_font_loadRGB(sheet, 0, 0, 418, 9, 1, A_LOAD_ALL | A_LOAD_CAPS, 255, 100, 60);
 
-    sprites.small = a_blit_makeSprite(sheet, 0, 19, 312, 17);
-    sprites.large = a_blit_makeSprite(sheet, 313, 19, 312, 23);
+    sprites.small = a_sprite_make(sheet, 0, 19, 312, 17);
+    sprites.large = a_sprite_make(sheet, 313, 19, 312, 23);
 
     Sprite* bars[2];
-    bars[0] = a_blit_makeSprite(sheet, 626, 19, 1, 17);
-    bars[1] = a_blit_makeSprite(sheet, 628, 19, 1, 17);
+    bars[0] = a_sprite_make(sheet, 626, 19, 1, 17);
+    bars[1] = a_sprite_make(sheet, 628, 19, 1, 17);
 
-    sprites.menu[0] = a_blit_makeBlankSprite(312, 17);
-    sprites.menu[1] = a_blit_makeBlankSprite(312, 17);
+    sprites.menu[0] = a_sprite_makeBlank(312, 17);
+    sprites.menu[1] = a_sprite_makeBlank(312, 17);
 
     for(int i = 2; i--; ) {
-        a_screen_setTarget(sprites.menu[i]->data, sprites.menu[i]->w, sprites.menu[i]->h);
+        a_screen_setTarget(a_sprite_data(sprites.menu[i]), a_sprite_w(sprites.menu[i]), a_sprite_h(sprites.menu[i]));
 
-        for(int j = sprites.menu[i]->w; j--; ) {
+        for(int j = a_sprite_w(sprites.menu[i]); j--; ) {
             a_blit_NCNT(bars[i], j, 0);
         }
     }
 
     a_screen_resetTarget();
 
-    a_blit_freeSheet(sheet);
+    a_sprite_freeSheet(sheet);
 }

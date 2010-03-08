@@ -122,14 +122,17 @@ static void drawTitle(void)
 
     a_font_text(A_LEFT, 12, 12, fonts.orange, NCT, currentTask);
 
-    a_font_text(A_RIGHT, a_width - 12, 12, fonts.whiteBold, NCT, "INImaker 1.1");
-    a_font_text(A_RIGHT, a_width - 12, 12, fonts.grayBold, NCT, "1.1");
+    String64 title;
+    sprintf(title, "%s %s", a2x_str("title"), a2x_str("version"));
+
+    a_font_text(A_RIGHT, a_width - 12, 12, fonts.whiteBold, NCT, title);
+    a_font_text(A_RIGHT, a_width - 12, 12, fonts.grayBold, NCT, a2x_str("version"));
 }
 
 static void drawControls(void)
 {
     int x;
-    const int y = a_height - 1 - 4 - sprites.large->h;
+    const int y = a_height - 1 - 4 - a_sprite_h(sprites.large);
 
     a_blit_NCNT(sprites.large, 4, y);
 
@@ -149,8 +152,8 @@ static void drawControls(void)
 static void drawDryRun(int alone)
 {
     const int y = alone
-        ? a_height - 1 - 4 - sprites.small->h
-        : a_height - 1 - 4 - sprites.large->h - 2 - sprites.small->h;
+        ? a_height - 1 - 4 - a_sprite_h(sprites.small)
+        : a_height - 1 - 4 - a_sprite_h(sprites.large) - 2 - a_sprite_h(sprites.small);
 
     a_blit_NCNT(sprites.small, 4, y);
 
@@ -167,9 +170,9 @@ static void drawDryRun(int alone)
 
 static void drawMenu(Menu* const m)
 {
-    const int h = sprites.menu[0]->h + 2;
+    const int h = a_sprite_h(sprites.menu[0]) + 2;
 
-    for(int y = 4 + sprites.large->h + 4; a_menu_iterate(m); y += h) {
+    for(int y = 4 + a_sprite_h(sprites.large) + 4; a_menu_iterate(m); y += h) {
         Item* const item = a_menu_currentItem(m);
 
         if(a_menu_isSelected(m)) {
@@ -187,7 +190,7 @@ static void drawMenu(Menu* const m)
 
 static void drawConsole(void)
 {
-    for(int y = 4 + sprites.large->h + 4; a_list_iterate(lines); y += 10) {
+    for(int y = 4 + a_sprite_h(sprites.large) + 4; a_list_iterate(lines); y += 10) {
         Line* const line = a_list_current(lines);
         a_font_fixed(A_LEFT | A_SAFE, 8, y, line->font, NCT, a_width - 8 - 8, line->text);
     }

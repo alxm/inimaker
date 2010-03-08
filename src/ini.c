@@ -102,14 +102,14 @@ State(iniWork)
     gui_line(fonts.green, "Found %d good INI files", a_list_size(iniGpes));
 
     // stack of dirs to look for GPEs in
-    Stack* const stack = a_stack_set();
-    a_stack_push(stack, a_str_dup(startPath));
+    List* const stack = a_list_set();
+    a_list_push(stack, a_str_dup(startPath));
 
     // number of INIs written so far
     int iniNumber = 0;
 
-    while(!a_stack_isEmpty(stack)) {
-        char* const path = a_stack_pop(stack);
+    while(!a_list_isEmpty(stack)) {
+        char* const path = a_list_pop(stack);
 
         // all the files in the current dir
         List* const files = a_file_list(path, NULL);
@@ -119,14 +119,17 @@ State(iniWork)
         while(a_list_iterate(files)) {
             FilePath* const file = a_list_current(files);
 
-            if(a_file_isDir(file->full)) {
+            const char* const fileName = a_file_pathName(file);
+            const char* const fileFull = a_file_pathFull(file);
+
+            if(a_file_isDir(fileFull)) {
                 // we'll look in this dir next
-                a_stack_push(stack, a_str_dup(file->full));
-            } else if(isGpe(file->name) && !iniExists(iniGpes, file->full)) {
-                char* const name = a_str_extractName(file->name);
+                a_list_push(stack, a_str_dup(fileFull));
+            } else if(isGpe(fileName) && !iniExists(iniGpes, fileFull)) {
+                char* const name = a_str_extractName(fileName);
 
                 // take out startPath prefix and file extension
-                char* const relPath = a_str_sub(file->full, strlen(startPath), strlen(file->full) - 4);
+                char* const relPath = a_str_sub(fileFull, strlen(startPath), strlen(fileFull) - 4);
 
                 // don't overwrite an existing INI file
                 char* iniName = NULL;
@@ -190,7 +193,7 @@ State(iniWork)
     }
 
     a_list_freeContent(iniGpes);
-    a_stack_free(stack);
+    a_list_free(stack);
 
     gui_line(fonts.orangeBold, "Done!");
     gui_line(fonts.orange, "Wrote %d INI files", iniNumber);
@@ -225,7 +228,7 @@ State(iniIcons)
         char* gpe = NULL;
         char* icon = NULL;
 
-        FileReader* const fr = a_file_makeReader(fp_ini->full);
+        FileReader* const fr = a_file_makeReader(a_file_pathFull(fp_ini));
 
         // look for icon and path in INI file
         while(a_file_readLine(fr)) {
@@ -283,7 +286,7 @@ State(iniIcons)
                     FilePath* const fp_png = a_list_peek(pngs);
 
                     if(fp_png) {
-                        pngName = a_str_merge(3, relPath, "/", fp_png->name);
+                        pngName = a_str_merge(3, relPath, "/", a_file_pathName(fp_png));
                     }
 
                     a_list_freeContent(pngs);
@@ -291,19 +294,19 @@ State(iniIcons)
 
                 if(pngName) {
                     if(dryRun) {
-                        gui_line(fonts.white, "Updated %s - %s", fp_ini->name, pngName);
+                        gui_line(fonts.white, "Updated %s - %s", a_file_pathName(fp_ini), pngName);
                         iconNumber++;
                     } else {
-                        File* const f_ini = a_file_openAppendText(fp_ini->full);
+                        File* const f_ini = a_file_openAppendText(a_file_pathFull(fp_ini));
 
                         if(f_ini) {
                             fprintf(f_ini, "icon=\"/%s\"\n", pngName);
                             a_file_close(f_ini);
 
-                            gui_line(fonts.white, "Updated %s - %s", fp_ini->name, pngName);
+                            gui_line(fonts.white, "Updated %s - %s", a_file_pathName(fp_ini), pngName);
                             iconNumber++;
                         } else {
-                            gui_line(fonts.red, "Can't update %s", fp_ini->name);
+                            gui_line(fonts.red, "Can't update %s", a_file_pathName(fp_ini));
                         }
                     }
                 }
@@ -353,7 +356,7 @@ State(iniDelete)
 
         char* gpe = NULL;
 
-        FileReader* const fr = a_file_makeReader(fp_ini->full);
+        FileReader* const fr = a_file_makeReader(a_file_pathFull(fp_ini));
 
         // look for path in INI file
         while(!gpe && a_file_readLine(fr)) {
@@ -378,16 +381,16 @@ State(iniDelete)
 
         if(del) {
             if(dryRun) {
-                gui_line(fonts.white, "Deleted %s", fp_ini->name);
+                gui_line(fonts.white, "Deleted %s", a_file_pathName(fp_ini));
                 deleteNumber++;
             } else {
-                char* const iniPath = a_str_merge(3, startPathGame, "/", fp_ini->name);
+                char* const iniPath = a_str_merge(3, startPathGame, "/", a_file_pathName(fp_ini));
 
                 if(remove(iniPath) == 0) {
-                    gui_line(fonts.white, "Deleted %s", fp_ini->name);
+                    gui_line(fonts.white, "Deleted %s", a_file_pathName(fp_ini));
                     deleteNumber++;
                 } else {
-                    gui_line(fonts.red, "Can't delete %s", fp_ini->name);
+                    gui_line(fonts.red, "Can't delete %s", a_file_pathName(fp_ini));
                 }
 
                 free(iniPath);
@@ -430,7 +433,7 @@ static List* findInis(void)
 
     while(a_list_iterate(inis)) {
         FilePath* const fp = a_list_current(inis);
-        FileReader* const fr = a_file_makeReader(fp->full);
+        FileReader* const fr = a_file_makeReader(a_file_pathFull(fp));
 
         while(a_file_readLine(fr)) {
             char* const path = extractArg(a_file_getLine(fr), "path");

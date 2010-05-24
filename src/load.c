@@ -41,7 +41,6 @@ static void load_bannerStart(void);
 static void load_bannerDone(void);
 
 static void load_controls(void);
-static void unload_controls(void);
 static void load_sprites(void);
 
 State(load)
@@ -61,7 +60,6 @@ State(unload)
 {
     a_fade_toBlack(A_FADE_FAST);
 
-    unload_controls();
     gui_freeConsole();
 
     a_state_exit();
@@ -151,19 +149,9 @@ static void load_controls(void)
     controls.dryRun = a_input_set("pc.c, wiz.Select");
 }
 
-static void unload_controls(void)
-{
-    a_input_free(controls.exit);
-    a_input_free(controls.up);
-    a_input_free(controls.down);
-    a_input_free(controls.select);
-    a_input_free(controls.cancel);
-    a_input_free(controls.dryRun);
-}
-
 static void load_sprites(void)
 {
-    Sheet* const sheet = a_sprite_sheetFromData(gfx_ini_data, gfx_ini_w, gfx_ini_h);
+    Sheet* const sheet = a_sheet_fromData(gfx_ini_data, gfx_ini_w, gfx_ini_h);
 
     fonts.white = a_font_load(sheet, 0, 9, 505, 9, 1, A_LOAD_ALL);
     fonts.gray = a_font_loadRGB(sheet, 0, 9, 505, 9, 1, A_LOAD_ALL, 180, 180, 180);
@@ -195,5 +183,5 @@ static void load_sprites(void)
 
     a_screen_resetTarget();
 
-    a_sprite_freeSheet(sheet);
+    a_sheet_free(sheet);
 }

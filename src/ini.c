@@ -52,7 +52,7 @@ State(iniMake)
     a_menu_addItem(m, gui_makeItem("Internal Memory (NAND)"));
     a_menu_addItem(m, gui_makeItem("Back"));
 
-    StateStart {
+    StateLoop {
         if(a_input_getUnpress(controls.exit)) {
             a_state_go(unload);
         } else if(a_menu_accept(m)) {
@@ -84,7 +84,7 @@ State(iniMake)
         }
 
         gui_draw(m);
-    } StateEnd;
+    }
 
     a_menu_free(m);
 }

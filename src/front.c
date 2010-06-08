@@ -37,7 +37,7 @@ State(front)
         a_fade_fromBlack(A_FADE_FAST);
     }
 
-    StateStart {
+    StateLoop {
         if(a_input_getUnpress(controls.exit)) {
             a_state_go(unload);
         } else if(a_menu_finished(m)) {
@@ -64,5 +64,5 @@ State(front)
         }
 
         gui_draw(m);
-    } StateEnd;
+    }
 }

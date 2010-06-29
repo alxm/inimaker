@@ -151,19 +151,19 @@ static void load_controls(void)
 
 static void load_sprites(void)
 {
-    Sheet* const sheet = a_sheet_fromData(gfx_ini_data, gfx_ini_w, gfx_ini_h);
+    Sheet* const sheet = a_sheet_fromData(ini);
 
-    fonts.white = a_font_load(sheet, 0, 9, 505, 9, 1, A_LOAD_ALL);
-    fonts.whiteBold = a_font_load(sheet, 0, 0, 418, 9, 1, A_LOAD_ALL | A_LOAD_CAPS);
+    fonts.white = a_font_load(sheet, 0, 9, 1, A_LOAD_ALL);
+    fonts.whiteBold = a_font_load(sheet, 0, 0, 1, A_LOAD_ALL | A_LOAD_CAPS);
 
-    fonts.gray = a_font_copyRGB(fonts.white, 180, 180, 180);
-    fonts.blue = a_font_copyRGB(fonts.white, 55, 99, 255);
-    fonts.orange = a_font_copyRGB(fonts.white, 255, 100, 60);
-    fonts.red = a_font_copyRGB(fonts.white, 255, 60, 60);
-    fonts.green = a_font_copyRGB(fonts.white, 0, 182, 10);
+    fonts.gray = a_font_copy(fonts.white, 180, 180, 180);
+    fonts.blue = a_font_copy(fonts.white, 55, 99, 255);
+    fonts.orange = a_font_copy(fonts.white, 255, 100, 60);
+    fonts.red = a_font_copy(fonts.white, 255, 60, 60);
+    fonts.green = a_font_copy(fonts.white, 0, 182, 10);
 
-    fonts.grayBold = a_font_copyRGB(fonts.whiteBold, 180, 180, 180);
-    fonts.orangeBold = a_font_copyRGB(fonts.whiteBold, 255, 100, 60);
+    fonts.grayBold = a_font_copy(fonts.whiteBold, 180, 180, 180);
+    fonts.orangeBold = a_font_copy(fonts.whiteBold, 255, 100, 60);
 
     sprites.small = a_sprite_make(sheet, 0, 19, 312, 17);
     sprites.large = a_sprite_make(sheet, 313, 19, 312, 23);

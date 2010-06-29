@@ -120,13 +120,13 @@ static void drawTitle(void)
 {
     a_blit_NCNT(sprites.large, 4, 4);
 
-    a_font_text(A_LEFT, 12, 12, fonts.orange, NCT, currentTask);
+    a_font_text(A_LEFT, 12, 12, fonts.orange, A_NCT, currentTask);
 
     String64 title;
     sprintf(title, "%s %s", a2x_str("title"), a2x_str("version"));
 
-    a_font_text(A_RIGHT, a_width - 12, 12, fonts.whiteBold, NCT, title);
-    a_font_text(A_RIGHT, a_width - 12, 12, fonts.grayBold, NCT, a2x_str("version"));
+    a_font_text(A_RIGHT, a_width - 12, 12, fonts.whiteBold, A_NCT, title);
+    a_font_text(A_RIGHT, a_width - 12, 12, fonts.grayBold, A_NCT, a2x_str("version"));
 }
 
 static void drawControls(void)
@@ -136,17 +136,17 @@ static void drawControls(void)
 
     a_blit_NCNT(sprites.large, 4, y);
 
-    x = a_font_text(A_LEFT, 12, y + 8, fonts.white, NCT, "B");
-    x = a_font_text(A_LEFT, x,  y + 8, fonts.blue,  NCT, " select");
-    x = a_font_text(A_LEFT, x,  y + 8, fonts.green, NCT, " / ");
-    x = a_font_text(A_LEFT, x,  y + 8, fonts.white, NCT, "X");
-    x = a_font_text(A_LEFT, x,  y + 8, fonts.blue,  NCT, " cancel ");
-    x = a_font_text(A_LEFT, x,  y + 8, fonts.green, NCT, " / ");
-    x = a_font_text(A_LEFT, x,  y + 8, fonts.white, NCT, "MENU");
-    x = a_font_text(A_LEFT, x,  y + 8, fonts.blue,  NCT, " exit");
-    x = a_font_text(A_LEFT, x,  y + 8, fonts.green, NCT, " / ");
-    x = a_font_text(A_LEFT, x,  y + 8, fonts.white, NCT, "SELECT");
-    x = a_font_text(A_LEFT, x,  y + 8, fonts.blue,  NCT, " toggle safety");
+    x = a_font_text(A_LEFT, 12, y + 8, fonts.white, A_NCT, "B");
+    x = a_font_text(A_LEFT, x,  y + 8, fonts.blue,  A_NCT, " select");
+    x = a_font_text(A_LEFT, x,  y + 8, fonts.green, A_NCT, " / ");
+    x = a_font_text(A_LEFT, x,  y + 8, fonts.white, A_NCT, "X");
+    x = a_font_text(A_LEFT, x,  y + 8, fonts.blue,  A_NCT, " cancel ");
+    x = a_font_text(A_LEFT, x,  y + 8, fonts.green, A_NCT, " / ");
+    x = a_font_text(A_LEFT, x,  y + 8, fonts.white, A_NCT, "MENU");
+    x = a_font_text(A_LEFT, x,  y + 8, fonts.blue,  A_NCT, " exit");
+    x = a_font_text(A_LEFT, x,  y + 8, fonts.green, A_NCT, " / ");
+    x = a_font_text(A_LEFT, x,  y + 8, fonts.white, A_NCT, "SELECT");
+    x = a_font_text(A_LEFT, x,  y + 8, fonts.blue,  A_NCT, " toggle safety");
 }
 
 static void drawDryRun(int alone)
@@ -157,14 +157,14 @@ static void drawDryRun(int alone)
 
     a_blit_NCNT(sprites.small, 4, y);
 
-    int x = a_font_text(A_LEFT, 12, y + 5, fonts.white, NCT, "Safety ");
+    int x = a_font_text(A_LEFT, 12, y + 5, fonts.white, A_NCT, "Safety ");
 
     if(ini_dryRun()) {
-        x = a_font_text(A_LEFT, x, y + 5, fonts.whiteBold, NCT, "ON");
-        a_font_text(A_LEFT, x, y + 5, fonts.white, NCT, " - Files will not be written");
+        x = a_font_text(A_LEFT, x, y + 5, fonts.whiteBold, A_NCT, "ON");
+        a_font_text(A_LEFT, x, y + 5, fonts.white, A_NCT, " - Files will not be written");
     } else {
-        x = a_font_text(A_LEFT, x, y + 5, fonts.whiteBold, NCT, "OFF");
-        a_font_text(A_LEFT, x, y + 5, fonts.white, NCT, " - Files will be written");
+        x = a_font_text(A_LEFT, x, y + 5, fonts.whiteBold, A_NCT, "OFF");
+        a_font_text(A_LEFT, x, y + 5, fonts.white, A_NCT, " - Files will be written");
     }
 }
 
@@ -184,7 +184,7 @@ static void drawMenu(Menu* const m)
         a_blit_NCNT(sprites.menu[0], 4, y);
         a_blit_NCNT_a(sprites.menu[1], 4, y, item->alpha);
 
-        a_font_text(A_LEFT, 12, y + 5, fonts.whiteBold, NCT, item->text);
+        a_font_text(A_LEFT, 12, y + 5, fonts.whiteBold, A_NCT, item->text);
     }
 }
 
@@ -192,6 +192,6 @@ static void drawConsole(void)
 {
     for(int y = 4 + a_sprite_h(sprites.large) + 4; a_list_iterate(lines); y += 10) {
         Line* const line = a_list_current(lines);
-        a_font_fixed(A_LEFT | A_SAFE, 8, y, line->font, NCT, a_width - 8 - 8, line->text);
+        a_font_fixed(A_LEFT | A_SAFE, 8, y, line->font, A_NCT, a_width - 8 - 8, line->text);
     }
 }

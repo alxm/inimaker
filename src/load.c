@@ -175,11 +175,14 @@ static void load_sprites(void)
     sprites.menu[0] = a_sprite_makeBlank(312, 17);
     sprites.menu[1] = a_sprite_makeBlank(312, 17);
 
+    a_blit_setClip(A_BLIT_NCNT);
+    a_blit_setType(A_BLIT_PLAIN);
+
     for(int i = 2; i--; ) {
-        a_screen_setTarget(a_sprite_data(sprites.menu[i]), a_sprite_w(sprites.menu[i]), a_sprite_h(sprites.menu[i]));
+        a_screen_setTargetSprite(sprites.menu[i]);
 
         for(int j = a_sprite_w(sprites.menu[i]); j--; ) {
-            a_blit_NCNT(bars[i], j, 0);
+            a_blit(bars[i], j, 0);
         }
     }
 

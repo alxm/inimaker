@@ -58,7 +58,7 @@ State(load)
 
 State(unload)
 {
-    a_fade_toBlack(A_FADE_FAST);
+    a_fade_toBlack(10);
 
     gui_freeConsole();
 
@@ -151,7 +151,7 @@ static void load_controls(void)
 
 static void load_sprites(void)
 {
-    Sheet* const sheet = a_sheet_fromData(ini);
+    Sheet* const sheet = a_sheet_fromData(gfx_ini);
 
     fonts.white = a_font_load(sheet, 0, 9, 1, A_LOAD_ALL);
     fonts.whiteBold = a_font_load(sheet, 0, 0, 1, A_LOAD_ALL | A_LOAD_CAPS);
@@ -175,8 +175,8 @@ static void load_sprites(void)
     sprites.menu[0] = a_sprite_makeBlank(312, 17);
     sprites.menu[1] = a_sprite_makeBlank(312, 17);
 
-    a_blit_setClip(A_BLIT_NCNT);
-    a_blit_setType(A_BLIT_PLAIN);
+    a_pixel_setBlend(A_PIXEL_PLAIN);
+    a_pixel_setClip(false);
 
     for(int i = 2; i--; ) {
         a_screen_setTargetSprite(sprites.menu[i]);

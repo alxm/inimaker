@@ -21,20 +21,20 @@
 
 void a2x(void)
 {
-	a2x_set("title", "INImaker");
-	a2x_set("version", "1.1");
-	a2x_set("author", "Alex");
-	a2x_set("window", "yes");
-	a2x_set("width", "320");
-	a2x_set("height", "240");
-	a2x_set("fps", "30");
-	a2x_set("quiet", "no");
-	a2x_set("compiled", A_COMPILE_TIME);
-	a2x_set("gp2xMenu", "yes");
-	a2x_set("fixWizTear", "no");
+    a2x_set("app.title", "INImaker");
+    a2x_set("app.version", "1.1");
+    a2x_set("app.author", "Alex");
+    a2x_set("video.window", "yes");
+    a2x_set("video.width", "320");
+    a2x_set("video.height", "240");
+    a2x_set("fps.rate", "30");
+    a2x_set("app.quiet", "y");
+    a2x_set("app.compiled", A_COMPILE_TIME);
+    a2x_set("app.gp2xMenu", "yes");
+    a2x_set("video.wizTear", "no");
 }
 
 void Main(void)
 {
-	a_state_go(load);
+    a_state_go(load);
 }

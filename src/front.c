@@ -34,7 +34,7 @@ State(front)
     if(firstRun) {
         firstRun = 0;
         gui_draw(m);
-        a_fade_fromBlack(A_FADE_FAST);
+        a_fade_fromBlack(10);
     }
 
     StateLoop {

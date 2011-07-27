@@ -3,5 +3,5 @@ TARGET_DIR = ..
 SRC_DIR = ../src
 GFX_DIR = ../gfx
 SFX_DIR =
-A2X_PATH = /home/alex/dev/a2x-framework/tools/..
+A2X_PATH = /home/alex/dev/open/a2x/bin
 include $(A2X_PATH)/make/project/Makefile.linux

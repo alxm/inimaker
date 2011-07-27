@@ -103,7 +103,7 @@ void gui_consoleLine(const int font, const char* const text)
 
 void gui_draw(Menu* const m)
 {
-    a_draw_fill(0);
+    a_draw_fill_fast(0);
     drawTitle();
 
     if(m) {
@@ -118,24 +118,24 @@ void gui_draw(Menu* const m)
 
 static void drawTitle(void)
 {
-    a_blit_setType(A_BLIT_PLAIN);
-    a_blit_setClip(A_BLIT_NCT);
+    a_pixel_setBlend(A_PIXEL_PLAIN);
+    a_pixel_setClip(false);
 
     a_blit(sprites.large, 4, 4);
 
     a_font_text(A_LEFT, 12, 12, fonts.orange, currentTask);
 
     String64 title;
-    sprintf(title, "%s %s", a2x_str("title"), a2x_str("version"));
+    sprintf(title, "%s %s", a2x_str("app.title"), a2x_str("app.version"));
 
     a_font_text(A_RIGHT, a_width - 12, 12, fonts.whiteBold, title);
-    a_font_text(A_RIGHT, a_width - 12, 12, fonts.grayBold, a2x_str("version"));
+    a_font_text(A_RIGHT, a_width - 12, 12, fonts.grayBold, a2x_str("app.version"));
 }
 
 static void drawControls(void)
 {
-    a_blit_setType(A_BLIT_PLAIN);
-    a_blit_setClip(A_BLIT_NCT);
+    a_pixel_setBlend(A_PIXEL_PLAIN);
+    a_pixel_setClip(false);
 
     int x;
     const int y = a_height - 1 - 4 - a_sprite_h(sprites.large);
@@ -157,8 +157,8 @@ static void drawControls(void)
 
 static void drawDryRun(int alone)
 {
-    a_blit_setType(A_BLIT_PLAIN);
-    a_blit_setClip(A_BLIT_NCT);
+    a_pixel_setBlend(A_PIXEL_PLAIN);
+    a_pixel_setClip(false);
 
     const int y = alone
         ? a_height - 1 - 4 - a_sprite_h(sprites.small)
@@ -179,7 +179,7 @@ static void drawDryRun(int alone)
 
 static void drawMenu(Menu* const m)
 {
-    a_blit_setClip(A_BLIT_NCT);
+    a_pixel_setClip(false);
 
     const int h = a_sprite_h(sprites.menu[0]) + 2;
 
@@ -192,22 +192,22 @@ static void drawMenu(Menu* const m)
             item->alpha = a_math_max(item->alpha - 32, 0);
         }
 
-        a_blit_setType(A_BLIT_PLAIN);
+        a_pixel_setBlend(A_PIXEL_PLAIN);
         a_blit(sprites.menu[0], 4, y);
 
-        a_blit_setType(A_BLIT_ALPHA);
-        a_blit_setAlpha(item->alpha);
+        a_pixel_setBlend(A_PIXEL_RGBA);
+        a_pixel_setAlpha(item->alpha);
         a_blit(sprites.menu[1], 4, y);
 
-        a_blit_setType(A_BLIT_PLAIN);
+        a_pixel_setBlend(A_PIXEL_PLAIN);
         a_font_text(A_LEFT, 12, y + 5, fonts.whiteBold, item->text);
     }
 }
 
 static void drawConsole(void)
 {
-    a_blit_setClip(A_BLIT_NCT);
-    a_blit_setType(A_BLIT_PLAIN);
+    a_pixel_setBlend(A_PIXEL_PLAIN);
+    a_pixel_setClip(false);
 
     for(int y = 4 + a_sprite_h(sprites.large) + 4; a_list_iterate(lines); y += 10) {
         Line* const line = a_list_current(lines);

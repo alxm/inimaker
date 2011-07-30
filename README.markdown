@@ -21,6 +21,28 @@ Controls
     Select - toggle Safety on/off
     Menu   - exit INImaker, or return to main menu
 
+Build from Source
+-----------------
+
+### Install a2x
+
+Follow the [instructions here](https://github.com/alxm/a2x#readme).
+
+### Download
+
+    $ cd ~
+    $ git clone git://github.com/alxm/inimaker.git inimaker
+
+### Configure
+
+Edit `A2X_PATH` in `inimaker/make/Makefile` and `inimaker/make/Makefile.wiz` with the correct path to `a2x/bin`.
+
+### Build
+
+    $ cd ~/inimaker/make
+    $ make                 # desktop version
+    $ make -f Makefile.wiz # GP2X Wiz version
+
 License
 -------
 

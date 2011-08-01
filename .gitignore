@@ -1,5 +1,5 @@
 *.o
 /src/gfx/*
-/gfx/loading.png
 /todo
 /inimaker
+/Inimaker.gpe

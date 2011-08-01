@@ -48,4 +48,7 @@ License
 
 Copyright 2010 Alex Margarit (artraid@gmail.com)
 
-Licensed under GNU GPL3.
+* Code licensed under GNU GPL3.
+* Opening logo (gfx/loading.png) licensed under [CC BY-NC-ND 3.0](http://creativecommons.org/licenses/by-nc-nd/3.0/).
+* Other graphics licensed under [CC BY-SA 3.0](http://creativecommons.org/licenses/by-sa/3.0/).
+

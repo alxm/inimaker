@@ -17,21 +17,13 @@
     along with INImaker.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#define LOADING_BANNER 0
-
 #include "includes.h"
 
-#include "gfx/ini.h"
+static Sprite* sp1;
+static Sprite* sp2;
+static Sprite* sp3;
 
-#if LOADING_BANNER
-    #include "gfx/loading.h"
-
-    static Sprite* sp1;
-    static Sprite* sp2;
-    static Sprite* sp3;
-
-    #define FADE_SPEED (FONE8 >> 4)
-#endif
+#define FADE_SPEED (FONE8 >> 4)
 
 Controls controls;
 Sprites sprites;

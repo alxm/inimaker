@@ -21,6 +21,7 @@
 #define H_INCLUDES_H
 
 #include <a2x.h>
+#include "gfx/all.h"
 
 extern State(load);
 extern State(unload);

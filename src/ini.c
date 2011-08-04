@@ -112,10 +112,7 @@ State(iniWork)
         // all the files in the current dir
         Dir* const dir = a_dir_open(a_list_pop(stack));
 
-        while(a_dir_iterate(dir)) {
-            const char* const fileFull = a_dir_current(dir);
-            const char* const fileName = a_str_getSuffixLastFind(fileFull, '/');
-
+        DirIterate(dir, fileName, fileFull) {
             if(a_file_isDir(fileFull)) {
                 // we'll look in this dir next
                 a_list_push(stack, a_str_dup(fileFull));
@@ -216,9 +213,7 @@ State(iniIcons)
     // number of icons found so far
     int iconNumber = 0;
 
-    while(a_dir_iterate(inis)) {
-        const char* const fp_ini = a_dir_current(inis);
-
+    DirIterate(inis, fp_name, fp_ini) {
         char* gpe = NULL;
         char* icon = NULL;
 
@@ -278,8 +273,7 @@ State(iniIcons)
 
                     // look at the first one only, what a waste :-)
                     if(a_dir_iterate(pngs)) {
-                        const char* const fp_png = a_dir_current(pngs);
-                        pngName = a_str_merge(relPath, "/", a_str_getSuffixLastFind(fp_png, '/'));
+                        pngName = a_str_merge(relPath, "/", a_dir_current(pngs)[0]);
                     }
 
                     a_dir_close(pngs);
@@ -344,9 +338,7 @@ State(iniDelete)
     // number of deleted INIs
     int deleteNumber = 0;
 
-    while(a_dir_iterate(inis)) {
-        const char* const fp_ini = a_dir_current(inis);
-
+    DirIterate(inis, fp_name, fp_ini) {
         char* gpe = NULL;
 
         File* const fr = a_file_open(fp_ini, "r");
@@ -424,8 +416,7 @@ static List* findInis(void)
     Dir* const inis = a_dir_openFilter(startPathGame, isIni);
     List* const gpes = a_list_set();
 
-    while(a_dir_iterate(inis)) {
-        const char* const fp = a_dir_current(inis);
+    DirIterate(inis, fp_name, fp) {
         File* const fr = a_file_open(fp, "r");
 
         while(a_file_readLine(fr)) {

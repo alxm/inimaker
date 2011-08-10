@@ -36,5 +36,13 @@ void a2x(void)
 
 void Main(void)
 {
-    a_state_go(load);
+    a_state_add("load", load);
+    a_state_add("unload", unload);
+    a_state_add("front", front);
+    a_state_add("iniMake", iniMake);
+    a_state_add("iniWork", iniWork);
+    a_state_add("iniIcons", iniIcons);
+    a_state_add("iniDelete", iniDelete);
+
+    a_state_push("load");
 }

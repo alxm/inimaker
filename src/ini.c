@@ -54,30 +54,30 @@ State(iniMake)
 
     StateLoop {
         if(a_input_getUnpress(controls.exit)) {
-            a_state_go(unload);
+            a_state_replace("unload");
         } else if(a_menu_accept(m)) {
             switch(a_menu_choice(m)) {
                 case 0: {
                     startPath = startPathGame;
-                    a_state_go(iniWork);
+                    a_state_replace("iniWork");
                 } break;
 
                 case 1: {
                     startPath = startPathSD;
-                    a_state_go(iniWork);
+                    a_state_replace("iniWork");
                 } break;
 
                 case 2: {
                     startPath = startPathNand;
-                    a_state_go(iniWork);
+                    a_state_replace("iniWork");
                 } break;
 
                 default: {
-                    a_state_go(front);
+                    a_state_replace("front");
                 } break;
             }
         } else if(a_menu_cancel(m)) {
-            a_state_go(front);
+            a_state_replace("front");
         } else {
             ini_toggleDryRun();
             a_menu_input(m);
@@ -195,7 +195,7 @@ State(iniWork)
 
     a_input_waitFor(controls.exit);
 
-    a_state_go(front);
+    a_state_replace("front");
 }
 
 State(iniIcons)
@@ -320,7 +320,7 @@ State(iniIcons)
 
     a_input_waitFor(controls.exit);
 
-    a_state_go(front);
+    a_state_replace("front");
 }
 
 State(iniDelete)
@@ -396,7 +396,7 @@ State(iniDelete)
 
     a_input_waitFor(controls.exit);
 
-    a_state_go(front);
+    a_state_replace("front");
 }
 
 int ini_dryRun(void)

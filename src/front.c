@@ -39,23 +39,23 @@ State(front)
 
     StateLoop {
         if(a_input_getUnpress(controls.exit)) {
-            a_state_go(unload);
+            a_state_replace("unload");
         } else if(a_menu_finished(m)) {
             switch(a_menu_choice(m)) {
                 case 0: {
-                    a_state_go(iniMake);
+                    a_state_replace("iniMake");
                 } break;
 
                 case 1: {
-                    a_state_go(iniIcons);
+                    a_state_replace("iniIcons");
                 } break;
 
                 case 2: {
-                    a_state_go(iniDelete);
+                    a_state_replace("iniDelete");
                 } break;
 
                 default: {
-                    a_state_go(unload);
+                    a_state_replace("unload");
                 } break;
             }
         } else {

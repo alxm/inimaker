@@ -45,7 +45,7 @@ State(load)
 
     load_bannerDone();
 
-    a_state_go(front);
+    a_state_replace("front");
 }
 
 State(unload)

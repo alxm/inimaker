@@ -127,7 +127,7 @@ State(iniWork)
                 int suffixNum = 0;
 
                 do {
-                    String8 suffixStr = "";
+                    char suffixStr[8] = "";
 
                     if(suffixNum > 0) {
                         sprintf(suffixStr, "-%d", suffixNum);
@@ -135,7 +135,7 @@ State(iniWork)
 
                     suffixNum++;
 
-                    String256 iniFileName;
+                    char iniFileName[256];
                     sprintf(iniFileName, "%s/%s%s.ini", startPathGame, name, suffixStr);
 
                     free(iniName);

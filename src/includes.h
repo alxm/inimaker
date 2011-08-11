@@ -44,7 +44,7 @@ extern void gui_draw(Menu* const m);
 
 #define gui_line(f, ...)     \
 ({                           \
-    String256 s;             \
+    char s[256];             \
     sprintf(s, __VA_ARGS__); \
     gui_consoleLine(f, s);   \
 })

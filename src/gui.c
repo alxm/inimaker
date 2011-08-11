@@ -125,7 +125,7 @@ static void drawTitle(void)
 
     a_font_text(A_LEFT, 12, 12, fonts.orange, currentTask);
 
-    String64 title;
+    char title[64];
     sprintf(title, "%s %s", a2x_str("app.title"), a2x_str("app.version"));
 
     a_font_text(A_RIGHT, a_width - 12, 12, fonts.whiteBold, title);

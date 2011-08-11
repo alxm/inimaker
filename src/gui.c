@@ -65,7 +65,7 @@ void gui_freeItem(void* v)
 
 void gui_makeConsole(void)
 {
-    lines = a_list_set();
+    lines = a_list_new();
 }
 
 void gui_freeConsole(void)

@@ -45,7 +45,7 @@ State(iniMake)
 {
     gui_setCurrentTask("Where to look?");
 
-    Menu* const m = a_menu_set(controls.down, controls.up, controls.select, controls.cancel, gui_freeItem);
+    Menu* const m = a_menu_new(controls.down, controls.up, controls.select, controls.cancel, gui_freeItem);
 
     a_menu_addItem(m, gui_makeItem("The 'game' folder"));
     a_menu_addItem(m, gui_makeItem("The entire SD card"));
@@ -102,7 +102,7 @@ State(iniWork)
     gui_line(fonts.green, "Found %d good INI files", a_list_size(iniGpes));
 
     // stack of dirs to look for GPEs in
-    List* const stack = a_list_set();
+    List* const stack = a_list_new();
     a_list_push(stack, a_str_dup(startPath));
 
     // number of INIs written so far
@@ -414,7 +414,7 @@ void ini_toggleDryRun(void)
 static List* findInis(void)
 {
     Dir* const inis = a_dir_openFilter(startPathGame, isIni);
-    List* const gpes = a_list_set();
+    List* const gpes = a_list_new();
 
     DirIterate(inis, fp_name, fp) {
         File* const fr = a_file_open(fp, "r");

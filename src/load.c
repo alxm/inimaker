@@ -133,12 +133,12 @@ static void load_bannerDone(void)
 
 static void load_controls(void)
 {
-    controls.exit = a_input_set("pc.Enter, wiz.Menu");
-    controls.up = a_input_set("pc.Up, wiz.Up");
-    controls.down = a_input_set("pc.Down, wiz.Down");
-    controls.select = a_input_set("pc.z, wiz.B");
-    controls.cancel = a_input_set("pc.x, wiz.X");
-    controls.dryRun = a_input_set("pc.c, wiz.Select");
+    controls.exit = a_input_new("pc.Enter, wiz.Menu");
+    controls.up = a_input_new("pc.Up, wiz.Up");
+    controls.down = a_input_new("pc.Down, wiz.Down");
+    controls.select = a_input_new("pc.z, wiz.B");
+    controls.cancel = a_input_new("pc.x, wiz.X");
+    controls.dryRun = a_input_new("pc.c, wiz.Select");
 }
 
 static void load_sprites(void)
@@ -157,15 +157,15 @@ static void load_sprites(void)
     fonts.grayBold = a_font_copy(fonts.whiteBold, 180, 180, 180);
     fonts.orangeBold = a_font_copy(fonts.whiteBold, 255, 100, 60);
 
-    sprites.small = a_sprite_make(sheet, 0, 19, 312, 17);
-    sprites.large = a_sprite_make(sheet, 313, 19, 312, 23);
+    sprites.small = a_sprite_new(sheet, 0, 19, 312, 17);
+    sprites.large = a_sprite_new(sheet, 313, 19, 312, 23);
 
     Sprite* bars[2];
-    bars[0] = a_sprite_make(sheet, 626, 19, 1, 17);
-    bars[1] = a_sprite_make(sheet, 628, 19, 1, 17);
+    bars[0] = a_sprite_new(sheet, 626, 19, 1, 17);
+    bars[1] = a_sprite_new(sheet, 628, 19, 1, 17);
 
-    sprites.menu[0] = a_sprite_makeBlank(312, 17);
-    sprites.menu[1] = a_sprite_makeBlank(312, 17);
+    sprites.menu[0] = a_sprite_newBlank(312, 17);
+    sprites.menu[1] = a_sprite_newBlank(312, 17);
 
     a_pixel_setBlend(A_PIXEL_PLAIN);
     a_pixel_setClip(false);

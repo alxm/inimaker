@@ -24,7 +24,7 @@ State(front)
     static int firstRun = 1;
     gui_setCurrentTask("Pick a task");
 
-    Menu* const m = a_menu_set(controls.down, controls.up, controls.select, NULL, gui_freeItem);
+    Menu* const m = a_menu_new(controls.down, controls.up, controls.select, NULL, gui_freeItem);
 
     a_menu_addItem(m, gui_makeItem("Make INI files"));
     a_menu_addItem(m, gui_makeItem("Find missing icons"));

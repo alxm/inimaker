@@ -57,10 +57,7 @@ void* gui_makeItem(const char* const text)
 
 void gui_freeItem(void* v)
 {
-    Item* const i = v;
-
-    free(i->text);
-    free(i);
+    free(v);
 }
 
 void gui_makeConsole(void)
@@ -70,12 +67,12 @@ void gui_makeConsole(void)
 
 void gui_freeConsole(void)
 {
-    a_list_freeContent(lines);
+    a_list_free(lines, true);
 }
 
 void gui_resetConsole(void)
 {
-    a_list_emptyContent(lines);
+    a_list_empty(lines, true);
 }
 
 void gui_consoleLine(const int font, const char* const text)
@@ -90,15 +87,11 @@ void gui_consoleLine(const int font, const char* const text)
     a_list_addLast(lines, line);
 
     if(a_list_size(lines) > CONSOLE_LINES) {
-        Line* const first = a_list_pop(lines);
-
-        free(first->text);
-        free(first);
+        free(a_list_pop(lines));
     }
 
     gui_draw(NULL);
     a_screen_show();
-    //a_time_waitMilis(500);
 }
 
 void gui_draw(Menu* const m)
@@ -122,7 +115,6 @@ static void drawTitle(void)
     a_pixel_setClip(false);
 
     a_blit(sprites.large, 4, 4);
-
     a_font_text(A_LEFT, 12, 12, fonts.orange, currentTask);
 
     char title[64];

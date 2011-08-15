@@ -23,13 +23,13 @@
 #include <a2x.h>
 #include "gfx/all.h"
 
-extern State(load);
-extern State(unload);
-extern State(front);
-extern State(iniMake);
-extern State(iniWork);
-extern State(iniIcons);
-extern State(iniDelete);
+extern A_STATE(load);
+extern A_STATE(unload);
+extern A_STATE(front);
+extern A_STATE(iniMake);
+extern A_STATE(iniWork);
+extern A_STATE(iniIcons);
+extern A_STATE(iniDelete);
 
 // gui.c
 

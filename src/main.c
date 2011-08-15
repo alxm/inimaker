@@ -28,21 +28,22 @@ void a2x(void)
     a2x_set("video.width", "320");
     a2x_set("video.height", "240");
     a2x_set("fps.rate", "30");
-    a2x_set("app.quiet", "y");
+    a2x_set("app.quiet", "n");
     a2x_set("app.compiled", A_COMPILE_TIME);
     a2x_set("app.gp2xMenu", "yes");
     a2x_set("video.wizTear", "no");
+    a2x_set("screenshot.dir", "./inimaker-screenshots");
 }
 
 void Main(void)
 {
-    a_state_add("load", load);
-    a_state_add("unload", unload);
-    a_state_add("front", front);
-    a_state_add("iniMake", iniMake);
-    a_state_add("iniWork", iniWork);
-    a_state_add("iniIcons", iniIcons);
-    a_state_add("iniDelete", iniDelete);
+    a_state_new("load", load);
+    a_state_new("unload", unload);
+    a_state_new("front", front);
+    a_state_new("iniMake", iniMake);
+    a_state_new("iniWork", iniWork);
+    a_state_new("iniIcons", iniIcons);
+    a_state_new("iniDelete", iniDelete);
 
     a_state_push("load");
 }

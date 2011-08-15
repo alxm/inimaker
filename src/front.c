@@ -19,50 +19,66 @@
 
 #include "includes.h"
 
-State(front)
+A_STATE(front)
 {
-    static int firstRun = 1;
-    gui_setCurrentTask("Pick a task");
+    A_STATE_INIT
+    {
+        Menu* const menu = a_menu_new(controls.down, controls.up, controls.select, NULL, gui_freeItem);
 
-    Menu* const m = a_menu_new(controls.down, controls.up, controls.select, NULL, gui_freeItem);
+        a_menu_addItem(menu, gui_makeItem("Make INI files"));
+        a_menu_addItem(menu, gui_makeItem("Find missing icons"));
+        a_menu_addItem(menu, gui_makeItem("Delete unused INI files"));
+        a_menu_addItem(menu, gui_makeItem("Exit"));
 
-    a_menu_addItem(m, gui_makeItem("Make INI files"));
-    a_menu_addItem(m, gui_makeItem("Find missing icons"));
-    a_menu_addItem(m, gui_makeItem("Delete unused INI files"));
-    a_menu_addItem(m, gui_makeItem("Exit"));
+        a_state_add("menu", menu);
 
-    if(firstRun) {
-        firstRun = 0;
-        gui_draw(m);
+        gui_setCurrentTask("Pick a task");
+        gui_draw(menu);
+
         a_fade_fromBlack(10);
     }
 
-    StateLoop {
-        if(a_input_getUnpress(controls.exit)) {
-            a_state_replace("unload");
-        } else if(a_menu_finished(m)) {
-            switch(a_menu_choice(m)) {
-                case 0: {
-                    a_state_replace("iniMake");
-                } break;
+    A_STATE_BODY
+    {
+        Menu* const menu = a_state_get("menu");
 
-                case 1: {
-                    a_state_replace("iniIcons");
-                } break;
+        gui_setCurrentTask("Pick a task");
 
-                case 2: {
-                    a_state_replace("iniDelete");
-                } break;
+        A_STATE_LOOP
+        {
+            if(a_input_getUnpress(controls.exit)) {
+                a_state_replace("unload");
+            } else if(a_menu_finished(menu)) {
+                switch(a_menu_choice(menu)) {
+                    case 0: {
+                        a_state_push("iniMake");
+                    } break;
 
-                default: {
-                    a_state_replace("unload");
-                } break;
+                    case 1: {
+                        a_state_push("iniIcons");
+                    } break;
+
+                    case 2: {
+                        a_state_push("iniDelete");
+                    } break;
+
+                    default: {
+                        a_state_replace("unload");
+                    } break;
+                }
+
+                a_menu_keepRunning(menu);
+            } else {
+                ini_toggleDryRun();
+                a_menu_input(menu);
             }
-        } else {
-            ini_toggleDryRun();
-            a_menu_input(m);
-        }
 
-        gui_draw(m);
+            gui_draw(menu);
+        }
+    }
+
+    A_STATE_FREE
+    {
+        a_menu_free(a_state_get("menu"));
     }
 }

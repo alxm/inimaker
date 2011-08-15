@@ -35,7 +35,7 @@ static void load_bannerDone(void);
 static void load_controls(void);
 static void load_sprites(void);
 
-State(load)
+A_STATE(load)
 {
     load_bannerStart();
 
@@ -48,7 +48,7 @@ State(load)
     a_state_replace("front");
 }
 
-State(unload)
+A_STATE(unload)
 {
     a_fade_toBlack(10);
 

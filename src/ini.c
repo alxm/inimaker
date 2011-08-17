@@ -19,7 +19,7 @@
 
 #include "includes.h"
 
-static int dryRun = 1;
+static bool dryRun = true;
 
 static char pathBuffer[PATH_MAX];
 static const char* startPath;
@@ -95,290 +95,299 @@ A_STATE(iniMake)
 
 A_STATE(iniWork)
 {
-    gui_setCurrentTask("Working, do not turn off...");
-    gui_resetConsole();
+    A_STATE_BODY
+    {
+        gui_setCurrentTask("Working, do not turn off...");
+        gui_resetConsole();
 
-    gui_line(fonts.green, "Reading current INI files");
+        gui_line(fonts.green, "Reading current INI files");
 
-    // list of GPEs already linked to by INI files
-    List* const iniGpes = findInis();
+        // list of GPEs already linked to by INI files
+        List* const iniGpes = findInis();
 
-    gui_line(fonts.green, "Found %d good INI files", a_list_size(iniGpes));
+        gui_line(fonts.green, "Found %d good INI files", a_list_size(iniGpes));
 
-    // stack of dirs to look for GPEs in
-    List* const stack = a_list_new();
-    a_list_push(stack, a_str_dup(startPath));
+        // stack of dirs to look for GPEs in
+        List* const stack = a_list_new();
+        a_list_push(stack, a_str_dup(startPath));
 
-    // number of INIs written so far
-    int iniNumber = 0;
+        // number of INIs written so far
+        int iniNumber = 0;
 
-    while(!a_list_isEmpty(stack)) {
-        // all the files in the current dir
-        Dir* const dir = a_dir_open(a_list_pop(stack));
+        while(!a_list_isEmpty(stack)) {
+            // all the files in the current dir
+            Dir* const dir = a_dir_open(a_list_pop(stack));
 
-        A_DIR_ITERATE(dir, fileName, fileFull)
-        {
-            if(a_file_isDir(fileFull)) {
-                // we'll look in this dir next
-                a_list_push(stack, a_str_dup(fileFull));
-            } else if(isGpe(fileName) && !iniExists(iniGpes, fileFull)) {
-                char* const name = a_str_extractName(fileName);
+            A_DIR_ITERATE(dir, fileName, fileFull)
+            {
+                if(a_file_isDir(fileFull)) {
+                    // we'll look in this dir next
+                    a_list_push(stack, a_str_dup(fileFull));
+                } else if(isGpe(fileName) && !iniExists(iniGpes, fileFull)) {
+                    char* const name = a_str_extractName(fileName);
 
-                // take out startPath prefix and file extension
-                char* const relPath = a_str_sub(fileFull, strlen(startPath), strlen(fileFull) - 4);
+                    // take out startPath prefix and file extension
+                    char* const relPath = a_str_sub(fileFull, strlen(startPath), strlen(fileFull) - 4);
 
-                // don't overwrite an existing INI file
-                char* iniName = NULL;
-                int suffixNum = 0;
+                    // don't overwrite an existing INI file
+                    char* iniName = NULL;
+                    int suffixNum = 0;
 
-                do {
-                    char suffixStr[8] = "";
+                    do {
+                        char suffixStr[8] = "";
 
-                    if(suffixNum > 0) {
-                        sprintf(suffixStr, "-%d", suffixNum);
-                    }
-
-                    suffixNum++;
-
-                    char iniFileName[256];
-                    sprintf(iniFileName, "%s/%s%s.ini", startPathGame, name, suffixStr);
-
-                    iniName = a_str_dup(iniFileName);
-                } while(a_file_exists(iniName));
-
-                if(dryRun) {
-                    gui_line(fonts.white, "Wrote %s", iniName);
-                    iniNumber++;
-                } else {
-                    File* const file = a_file_open(iniName, "w");
-
-                    if(file) {
-                        FILE* const f = a_file_file(file);
-
-                        fprintf(f, "[info]\n");
-                        fprintf(f, "name=\"%s\"\n", name);
-
-                        if(startPath == startPathGame) {
-                            fprintf(f, "path=\"%s.gpe\"\n", relPath);
-                            fprintf(f, "icon=\"%s.png\"\n", relPath);
-                        } else if(startPath == startPathSD) {
-                            fprintf(f, "path=\"/..%s.gpe\"\n", relPath);
-                            fprintf(f, "icon=\"/..%s.png\"\n", relPath);
-                        } else if(startPath == startPathNand) {
-                            fprintf(f, "path=\"/../../nand%s.gpe\"\n", relPath);
-                            fprintf(f, "icon=\"/../../nand%s.png\"\n", relPath);
+                        if(suffixNum > 0) {
+                            sprintf(suffixStr, "-%d", suffixNum);
                         }
 
-                        a_file_close(file);
+                        suffixNum++;
 
+                        char iniFileName[256];
+                        sprintf(iniFileName, "%s/%s%s.ini", startPathGame, name, suffixStr);
+
+                        iniName = a_str_dup(iniFileName);
+                    } while(a_file_exists(iniName));
+
+                    if(dryRun) {
                         gui_line(fonts.white, "Wrote %s", iniName);
                         iniNumber++;
                     } else {
-                        gui_line(fonts.red, "Can't write %s", iniName);
+                        File* const file = a_file_open(iniName, "w");
+
+                        if(file) {
+                            FILE* const f = a_file_file(file);
+
+                            fprintf(f, "[info]\n");
+                            fprintf(f, "name=\"%s\"\n", name);
+
+                            if(startPath == startPathGame) {
+                                fprintf(f, "path=\"%s.gpe\"\n", relPath);
+                                fprintf(f, "icon=\"%s.png\"\n", relPath);
+                            } else if(startPath == startPathSD) {
+                                fprintf(f, "path=\"/..%s.gpe\"\n", relPath);
+                                fprintf(f, "icon=\"/..%s.png\"\n", relPath);
+                            } else if(startPath == startPathNand) {
+                                fprintf(f, "path=\"/../../nand%s.gpe\"\n", relPath);
+                                fprintf(f, "icon=\"/../../nand%s.png\"\n", relPath);
+                            }
+
+                            a_file_close(file);
+
+                            gui_line(fonts.white, "Wrote %s", iniName);
+                            iniNumber++;
+                        } else {
+                            gui_line(fonts.red, "Can't write %s", iniName);
+                        }
                     }
                 }
             }
+
+            a_dir_close(dir);
         }
 
-        a_dir_close(dir);
+        a_list_free(iniGpes, true);
+        a_list_free(stack, false);
+
+        gui_line(fonts.orangeBold, "Done!");
+        gui_line(fonts.orange, "Wrote %d INI files", iniNumber);
+        gui_line(fonts.blue, "Press MENU to continue");
+
+        gui_setCurrentTask("Finished");
+        gui_draw(NULL);
+
+        a_input_waitFor(controls.exit);
+        a_state_pop();
     }
-
-    a_list_free(iniGpes, true);
-    a_list_free(stack, false);
-
-    gui_line(fonts.orangeBold, "Done!");
-    gui_line(fonts.orange, "Wrote %d INI files", iniNumber);
-    gui_line(fonts.blue, "Press MENU to continue");
-
-    gui_setCurrentTask("Finished");
-    gui_draw(NULL);
-
-    a_input_waitFor(controls.exit);
-    a_state_pop();
 }
 
 A_STATE(iniIcons)
 {
-    gui_setCurrentTask("Working, do not turn off...");
-    gui_resetConsole();
-
-    gui_line(fonts.green, "Reading INI files");
-
-    // all INI files
-    Dir* const inis = a_dir_openFilter(startPathGame, isIni);
-
-    gui_line(fonts.green, "Found %d INI files", a_dir_num(inis));
-
-    // number of icons found so far
-    int iconNumber = 0;
-
-    A_DIR_ITERATE(inis, fp_name, fp_ini)
+    A_STATE_BODY
     {
-        char* gpe = NULL;
-        char* icon = NULL;
+        gui_setCurrentTask("Working, do not turn off...");
+        gui_resetConsole();
 
-        File* const fr = a_file_open(fp_ini, "r");
+        gui_line(fonts.green, "Reading INI files");
 
-        // look for icon and path in INI file
-        while(a_file_readLine(fr)) {
-            char* const gpe2 = extractArg(a_file_getLine(fr), "path");
-            char* const icon2 = extractArg(a_file_getLine(fr), "icon");
+        // all INI files
+        Dir* const inis = a_dir_openFilter(startPathGame, isIni);
 
-            if(gpe2) {
-                gpe = gpe2;
+        gui_line(fonts.green, "Found %d INI files", a_dir_num(inis));
+
+        // number of icons found so far
+        int iconNumber = 0;
+
+        A_DIR_ITERATE(inis, fp_name, fp_ini)
+        {
+            char* gpe = NULL;
+            char* icon = NULL;
+
+            File* const fr = a_file_open(fp_ini, "r");
+
+            // look for icon and path in INI file
+            while(a_file_readLine(fr)) {
+                char* const gpe2 = extractArg(a_file_getLine(fr), "path");
+                char* const icon2 = extractArg(a_file_getLine(fr), "icon");
+
+                if(gpe2) {
+                    gpe = gpe2;
+                }
+
+                if(icon2) {
+                    icon = icon2;
+                }
             }
 
-            if(icon2) {
-                icon = icon2;
-            }
-        }
+            a_file_close(fr);
 
-        a_file_close(fr);
+            if(gpe) {
+                bool needIcon = false;
 
-        if(gpe) {
-            bool needIcon = false;
+                if(icon) {
+                    char* const iconPath = a_str_merge(startPathGame, "/", icon);
 
-            if(icon) {
-                char* const iconPath = a_str_merge(startPathGame, "/", icon);
-
-                if(!a_file_exists(iconPath)) {
+                    if(!a_file_exists(iconPath)) {
+                        needIcon = true;
+                    }
+                } else {
                     needIcon = true;
                 }
-            } else {
-                needIcon = true;
-            }
 
-            // either the icon link is broken, or no icon link is specified
-            if(needIcon) {
-                char* const relPath = a_str_extractPath(gpe);
-                char* const path = a_str_merge(startPathGame, "/", relPath);
+                // either the icon link is broken, or no icon link is specified
+                if(needIcon) {
+                    char* const relPath = a_str_extractPath(gpe);
+                    char* const path = a_str_merge(startPathGame, "/", relPath);
 
-                // this gives priority to a 'GPE-NAME.png' icon over any other PNG files
-                char* const gpeName = a_str_extractName(gpe);
-                char* pngName = a_str_merge(path, "/", gpeName, ".png");
+                    // this gives priority to a 'GPE-NAME.png' icon over any other PNG files
+                    char* const gpeName = a_str_extractName(gpe);
+                    char* pngName = a_str_merge(path, "/", gpeName, ".png");
 
-                if(a_file_exists(pngName)) {
-                    pngName = a_str_merge(relPath, "/", gpeName, ".png");
-                } else {
-                    pngName = NULL;
+                    if(a_file_exists(pngName)) {
+                        pngName = a_str_merge(relPath, "/", gpeName, ".png");
+                    } else {
+                        pngName = NULL;
 
-                    // all the pngs in GPE's dir
-                    Dir* const pngs = a_dir_openFilter(path, isPng);
+                        // all the pngs in GPE's dir
+                        Dir* const pngs = a_dir_openFilter(path, isPng);
 
-                    // look at the first one only, what a waste :-)
-                    if(a_dir_iterate(pngs)) {
-                        pngName = a_str_merge(relPath, "/", a_dir_current(pngs)[A_DIR_NAME]);
+                        // look at the first one only, what a waste :-)
+                        if(a_dir_iterate(pngs)) {
+                            pngName = a_str_merge(relPath, "/", a_dir_current(pngs)[A_DIR_NAME]);
+                        }
+
+                        a_dir_close(pngs);
                     }
 
-                    a_dir_close(pngs);
-                }
-
-                if(pngName) {
-                    if(dryRun) {
-                        gui_line(fonts.white, "Updated %s - %s", a_str_getSuffixLastFind(fp_ini, '/'), pngName);
-                        iconNumber++;
-                    } else {
-                        File* const f_ini = a_file_open(fp_ini, "a");
-
-                        if(f_ini) {
-                            fprintf(a_file_file(f_ini), "icon=\"/%s\"\n", pngName);
-                            a_file_close(f_ini);
-
+                    if(pngName) {
+                        if(dryRun) {
                             gui_line(fonts.white, "Updated %s - %s", a_str_getSuffixLastFind(fp_ini, '/'), pngName);
                             iconNumber++;
                         } else {
-                            gui_line(fonts.red, "Can't update %s", a_str_getSuffixLastFind(fp_ini, '/'));
+                            File* const f_ini = a_file_open(fp_ini, "a");
+
+                            if(f_ini) {
+                                fprintf(a_file_file(f_ini), "icon=\"/%s\"\n", pngName);
+                                a_file_close(f_ini);
+
+                                gui_line(fonts.white, "Updated %s - %s", a_str_getSuffixLastFind(fp_ini, '/'), pngName);
+                                iconNumber++;
+                            } else {
+                                gui_line(fonts.red, "Can't update %s", a_str_getSuffixLastFind(fp_ini, '/'));
+                            }
                         }
                     }
                 }
             }
         }
+
+        a_dir_close(inis);
+
+        gui_line(fonts.orangeBold, "Done!");
+        gui_line(fonts.orange, "Found %d icons", iconNumber);
+        gui_line(fonts.blue, "Press MENU to continue");
+
+        gui_setCurrentTask("Finished");
+        gui_draw(NULL);
+
+        a_input_waitFor(controls.exit);
+        a_state_pop();
     }
-
-    a_dir_close(inis);
-
-    gui_line(fonts.orangeBold, "Done!");
-    gui_line(fonts.orange, "Found %d icons", iconNumber);
-    gui_line(fonts.blue, "Press MENU to continue");
-
-    gui_setCurrentTask("Finished");
-    gui_draw(NULL);
-
-    a_input_waitFor(controls.exit);
-    a_state_pop();
 }
 
 A_STATE(iniDelete)
 {
-    gui_setCurrentTask("Working, do not turn off...");
-    gui_resetConsole();
-
-    gui_line(fonts.green, "Reading INI files");
-
-    // all INI files
-    Dir* const inis = a_dir_openFilter(startPathGame, isIni);
-
-    gui_line(fonts.green, "Found %d INI files", a_dir_num(inis));
-
-    // number of deleted INIs
-    int deleteNumber = 0;
-
-    A_DIR_ITERATE(inis, fp_name, fp_ini)
+    A_STATE_BODY
     {
-        char* gpe = NULL;
+        gui_setCurrentTask("Working, do not turn off...");
+        gui_resetConsole();
 
-        File* const fr = a_file_open(fp_ini, "r");
+        gui_line(fonts.green, "Reading INI files");
 
-        // look for path in INI file
-        while(!gpe && a_file_readLine(fr)) {
-            gpe = extractArg(a_file_getLine(fr), "path");
-        }
+        // all INI files
+        Dir* const inis = a_dir_openFilter(startPathGame, isIni);
 
-        a_file_close(fr);
+        gui_line(fonts.green, "Found %d INI files", a_dir_num(inis));
 
-        bool del = false;
+        // number of deleted INIs
+        int deleteNumber = 0;
 
-        if(gpe) {
-            char* const gpePath = a_str_merge(startPathGame, "/", gpe);
+        A_DIR_ITERATE(inis, fp_name, fp_ini)
+        {
+            char* gpe = NULL;
 
-            if(!a_file_exists(gpePath)) {
+            File* const fr = a_file_open(fp_ini, "r");
+
+            // look for path in INI file
+            while(!gpe && a_file_readLine(fr)) {
+                gpe = extractArg(a_file_getLine(fr), "path");
+            }
+
+            a_file_close(fr);
+
+            bool del = false;
+
+            if(gpe) {
+                char* const gpePath = a_str_merge(startPathGame, "/", gpe);
+
+                if(!a_file_exists(gpePath)) {
+                    del = true;
+                }
+            } else {
                 del = true;
             }
-        } else {
-            del = true;
-        }
 
-        if(del) {
-            if(dryRun) {
-                gui_line(fonts.white, "Deleted %s", a_str_getSuffixLastFind(fp_ini, '/'));
-                deleteNumber++;
-            } else {
-                char* const iniPath = a_str_merge(startPathGame, "/", a_str_getSuffixLastFind(fp_ini, '/'));
-
-                if(remove(iniPath) == 0) {
+            if(del) {
+                if(dryRun) {
                     gui_line(fonts.white, "Deleted %s", a_str_getSuffixLastFind(fp_ini, '/'));
                     deleteNumber++;
                 } else {
-                    gui_line(fonts.red, "Can't delete %s", a_str_getSuffixLastFind(fp_ini, '/'));
+                    char* const iniPath = a_str_merge(startPathGame, "/", a_str_getSuffixLastFind(fp_ini, '/'));
+
+                    if(remove(iniPath) == 0) {
+                        gui_line(fonts.white, "Deleted %s", a_str_getSuffixLastFind(fp_ini, '/'));
+                        deleteNumber++;
+                    } else {
+                        gui_line(fonts.red, "Can't delete %s", a_str_getSuffixLastFind(fp_ini, '/'));
+                    }
                 }
             }
         }
+
+        a_dir_close(inis);
+
+        gui_line(fonts.orangeBold, "Done!");
+        gui_line(fonts.orange, "Deleted %d useless INI files", deleteNumber);
+        gui_line(fonts.blue, "Press MENU to continue");
+
+        gui_setCurrentTask("Finished");
+        gui_draw(NULL);
+
+        a_input_waitFor(controls.exit);
+        a_state_pop();
     }
-
-    a_dir_close(inis);
-
-    gui_line(fonts.orangeBold, "Done!");
-    gui_line(fonts.orange, "Deleted %d useless INI files", deleteNumber);
-    gui_line(fonts.blue, "Press MENU to continue");
-
-    gui_setCurrentTask("Finished");
-    gui_draw(NULL);
-
-    a_input_waitFor(controls.exit);
-    a_state_pop();
 }
 
-int ini_dryRun(void)
+bool ini_dryRun(void)
 {
     return dryRun;
 }
@@ -386,7 +395,7 @@ int ini_dryRun(void)
 void ini_toggleDryRun(void)
 {
     if(a_input_getUnpress(controls.dryRun)) {
-        dryRun ^= 1;
+        dryRun = !dryRun;
     }
 }
 
@@ -424,8 +433,7 @@ static List* findInis(void)
 
 static bool iniExists(List* const gpes, const char* const file)
 {
-    A_LIST_ITERATE(gpes, char, gpe)
-    {
+    A_LIST_ITERATE(gpes, char, gpe) {
         if(a_str_equal(gpe, file)) {
             return true;
         }

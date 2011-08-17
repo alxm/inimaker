@@ -19,7 +19,7 @@
 
 #include "includes.h"
 
-void a2x(void)
+A_SETUP
 {
     a2x_set("app.title", "INImaker");
     a2x_set("app.version", "1.1");
@@ -35,7 +35,7 @@ void a2x(void)
     a2x_set("screenshot.dir", "./inimaker-screenshots");
 }
 
-void Main(void)
+A_MAIN
 {
     a_state_new("load", load);
     a_state_new("unload", unload);

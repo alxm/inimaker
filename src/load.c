@@ -37,24 +37,28 @@ static void load_sprites(void);
 
 A_STATE(load)
 {
-    load_bannerStart();
+    A_STATE_BODY
+    {
+        load_bannerStart();
 
-    load_controls();
-    load_sprites();
-    gui_makeConsole();
+        load_controls();
+        load_sprites();
+        gui_makeConsole();
 
-    load_bannerDone();
+        load_bannerDone();
 
-    a_state_replace("front");
+        a_state_replace("front");
+    }
 }
 
 A_STATE(unload)
 {
-    a_fade_toBlack(10);
-
-    gui_freeConsole();
-
-    a_state_exit();
+    A_STATE_BODY
+    {
+        a_fade_toBlack(10);
+        gui_freeConsole();
+        a_state_exit();
+    }
 }
 
 static void load_bannerStart(void)

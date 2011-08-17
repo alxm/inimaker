@@ -51,7 +51,7 @@ extern void gui_draw(Menu* const m);
 
 // ini.c
 
-extern int ini_dryRun(void);
+extern bool ini_dryRun(void);
 extern void ini_toggleDryRun(void);
 
 // load.c

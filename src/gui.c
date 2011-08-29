@@ -174,11 +174,10 @@ static void drawMenu(Menu* const m)
     a_pixel_setClip(false);
 
     const int h = a_sprite_h(sprites.menu[0]) + 2;
+    int y = 4 + a_sprite_h(sprites.large) + 4;
 
-    for(int y = 4 + a_sprite_h(sprites.large) + 4; a_menu_iterate(m); y += h) {
-        Item* const item = a_menu_currentItem(m);
-
-        if(a_menu_isSelected(m)) {
+    A_MENU_ITERATE(m, Item, item) {
+        if(a_menu_isSelected(m, item)) {
             item->alpha = a_math_min(item->alpha + 32, 255);
         } else {
             item->alpha = a_math_max(item->alpha - 32, 0);
@@ -193,6 +192,8 @@ static void drawMenu(Menu* const m)
 
         a_pixel_setBlend(A_PIXEL_PLAIN);
         a_font_text(A_LEFT, 12, y + 5, fonts.whiteBold, item->text);
+
+        y += h;
     }
 }
 
@@ -201,8 +202,10 @@ static void drawConsole(void)
     a_pixel_setBlend(A_PIXEL_PLAIN);
     a_pixel_setClip(false);
 
-    for(int y = 4 + a_sprite_h(sprites.large) + 4; a_list_iterate(lines); y += 10) {
-        Line* const line = a_list_current(lines);
+    int y = 4 + a_sprite_h(sprites.large) + 4;
+
+    A_LIST_ITERATE(lines, Line, line) {
         a_font_fixed(A_LEFT | A_SAFE, 8, y, line->font, a_width - 8 - 8, line->text);
+        y += 10;
     }
 }

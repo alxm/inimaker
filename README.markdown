@@ -26,16 +26,16 @@ Build from Source
 
 ### Install a2x
 
-Follow the [instructions here](https://github.com/alxm/a2x#readme).
+Follow the [instructions here](https://github.com/alxm/a2x/blob/2011.08/README.markdown).
 
 ### Download
 
     $ cd ~
-    $ git clone git://github.com/alxm/inimaker.git inimaker
+    $ git clone git://github.com/alxm/inimaker.git inimaker -b 2011.08
 
 ### Configure
 
-Edit `A2X_PATH` in `inimaker/make/Makefile` and `inimaker/make/Makefile.wiz` with the correct path to `a2x/bin`.
+You may need to edit `A2X_PATH` in `inimaker/make/Makefile` and `inimaker/make/Makefile.wiz` with the correct path to `a2x/bin`.
 
 ### Build
 
@@ -46,7 +46,7 @@ Edit `A2X_PATH` in `inimaker/make/Makefile` and `inimaker/make/Makefile.wiz` wit
 License
 -------
 
-Copyright 2010 Alex Margarit (artraid@gmail.com)
+Copyright 2010 Alex Margarit (alex@alxm.org)
 
 * Code licensed under GNU GPL3.
 * Opening logo (gfx/loading.png) licensed under [CC BY-NC-ND 3.0](http://creativecommons.org/licenses/by-nc-nd/3.0/).
